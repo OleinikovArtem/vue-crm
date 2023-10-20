@@ -1,12 +1,11 @@
 <script setup>
 import { RouterView } from 'vue-router'
-
+import ThemeToggle from '@/components/ThemeToggle.vue'
 </script>
 
 <template>
-
-  <RouterView/>
+  <ThemeToggle />
+  <RouterView />
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>
