@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { useQuery } from '@vue/apollo-composable'
-import { getProducts, GET_PRODUCTS } from '../services/apollo/queries/products/getProducts'
+import {
+  getProducts,
+  GET_PRODUCTS,
+  defaultResultGetProducts
+} from '../services/apollo/queries/products/getProducts'
 import { computed } from 'vue'
 
 const { result } = useQuery<GET_PRODUCTS>(getProducts)
-const productsData = computed(
-  () => result.value.products ?? { currentPage: 0, totalPages: 0, totalCount: 0, items: [] }
-)
+const productsData = computed(() => result.value.products ?? defaultResultGetProducts)
 </script>
 
 <template>
