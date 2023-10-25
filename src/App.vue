@@ -7,9 +7,3 @@ import Header from '@/components/Header.vue'
   <Header />
   <RouterView />
 </template>
-
-<style scoped lang="scss">
-.active-link {
-  @apply underline;
-}
-</style>

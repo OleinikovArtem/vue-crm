@@ -1,12 +1,14 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useQuery } from '@vue/apollo-composable'
+import ProductCard from '../components/ProductCard.vue'
+
 import {
   getProducts,
   GET_PRODUCTS,
   defaultResultGetProducts
 } from '../services/apollo/queries/products/getProducts'
-import { computed } from 'vue'
-import ProductCard from '../components/ProductCard.vue'
+import CreateProduct from '../components/modals/CreateProduct.vue'
 
 const { result } = useQuery<GET_PRODUCTS>(getProducts)
 const productsData = computed(() => result.value?.products ?? defaultResultGetProducts)
@@ -14,7 +16,7 @@ const productsData = computed(() => result.value?.products ?? defaultResultGetPr
 
 <template>
   <main>
-    <h1 class="text-3xl font-bold underline">Hello world!</h1>
+    <CreateProduct />
     <div>
       <div>Pages: {{ productsData.totalCount }}</div>
       <div>Current page: {{ productsData.currentPage }}</div>

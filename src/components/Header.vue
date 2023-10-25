@@ -6,8 +6,8 @@ import { routes } from '../router'
 <template>
   <header class="flex justify-between">
     <ThemeToggle />
-    <nav class="flex justify-center gap-4">
-      <ul>
+    <nav>
+      <ul class="flex justify-center gap-4 flex-1">
         <li v-for="route in routes">
           <router-link :to="route.path">{{ route?.name }}</router-link>
         </li>
