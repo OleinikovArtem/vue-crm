@@ -6,9 +6,10 @@ import {
   defaultResultGetProducts
 } from '../services/apollo/queries/products/getProducts'
 import { computed } from 'vue'
+import ProductCard from '../components/ProductCard.vue'
 
 const { result } = useQuery<GET_PRODUCTS>(getProducts)
-const productsData = computed(() => result.value.products ?? defaultResultGetProducts)
+const productsData = computed(() => result.value?.products ?? defaultResultGetProducts)
 </script>
 
 <template>
@@ -20,9 +21,8 @@ const productsData = computed(() => result.value.products ?? defaultResultGetPro
       <div>Total items: {{ productsData.totalCount }}</div>
     </div>
 
-    <div v-for="products in productsData.items" class="p-4 border m-2">
-      <div>{{ products.name }}</div>
-      <div>{{ products.description }}</div>
+    <div class="flex flex-wrap gap-4">
+      <ProductCard v-for="product in productsData.items" :product="product" />
     </div>
   </main>
 </template>

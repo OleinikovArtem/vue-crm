@@ -1,0 +1,146 @@
+type AuthResponse {
+  access_token: String!
+  refresh_token: String!
+}
+
+type User {
+  id: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  emailVerified: DateTime!
+  name: String!
+  email: String!
+  password: String!
+  image: String!
+  phone: String!
+  role: String!
+}
+
+# A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+scalar DateTime
+
+type Category {
+  id: String!
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  products: [Product!]
+}
+
+type Product {
+  id: String!
+  isPublish: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  description: String!
+  imageUrl: String!
+  price: Float!
+  count: Int!
+  categories: [Category!]
+}
+
+type OrderProduct {
+  id: String!
+  productId: String!
+  product: Product!
+  count: Int!
+}
+
+type TotalPrice {
+  value: Float!
+  currency: String!
+}
+
+type OrderBillingInfo {
+  bio: String!
+  fullName: String!
+  email: String!
+  houseNumber: String!
+  street: String!
+  city: String!
+  postalCode: String
+  country: String
+  id: String!
+}
+
+type Order {
+  id: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  customer: User
+  products: [OrderProduct!]!
+  status: String!
+  billingInfo: OrderBillingInfo!
+  totalPrice: TotalPrice!
+}
+
+type Query {
+  products(
+    page: Int = 1
+    limit: Int = 10
+    categories: [String!]
+  ): ProductsOutput!
+  product(id: String!): Product!
+  categories: [Category!]!
+  orders(page: Int = 1, limit: Int = 10, email: String): OrdersOutput!
+  order(id: String!): Order!
+}
+
+type ProductsOutput {
+  totalCount: Int!
+  totalPages: Int!
+  currentPage: Int!
+  items: [Product!]!
+}
+
+type OrdersOutput {
+  totalCount: Int!
+  totalPages: Int!
+  currentPage: Int!
+  items: [Order!]!
+}
+
+type Mutation {
+  createProduct(
+    name: String!
+    description: String!
+    imageUrl: String!
+    price: Float!
+    count: Int!
+    categories: [String!]
+  ): Product!
+  updateProduct(
+    name: String!
+    description: String!
+    imageUrl: String!
+    price: Float!
+    count: Int!
+    categories: [String!]
+    id: String!
+    isPublished: Boolean
+  ): Product!
+  login(email: String!, password: String!): AuthResponse!
+  registration(email: String!, password: String!, name: String!): AuthResponse!
+  makeAdmin(email: String!): User!
+  createOrder(
+    products: [OrderProductInput!]!
+    billingInfo: OrderBillingInfoInput!
+  ): Order!
+}
+
+input OrderProductInput {
+  productId: String!
+  count: Int!
+}
+
+input OrderBillingInfoInput {
+  bio: String!
+  fullName: String!
+  email: String!
+  houseNumber: String!
+  street: String!
+  city: String!
+  postalCode: String
+  country: String
+}
