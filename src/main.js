@@ -1,10 +1,10 @@
 import './assets/main.css'
 
-import { createApp, provide } from 'vue'
+import { createApp } from 'vue'
 import { provideApolloClient } from '@vue/apollo-composable'
 
 import App from '@/App.vue'
-import router from '@/router'
+import { router } from '@/router'
 import { apolloClient } from '@/services/apollo'
 
 const app = createApp(App)

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ThemeToggle from './ThemeToggle.vue'
+import { routes } from '../router'
 </script>
 
 <template>
@@ -7,13 +8,8 @@ import ThemeToggle from './ThemeToggle.vue'
     <ThemeToggle />
     <nav class="flex justify-center gap-4">
       <ul>
-        <li>
-          <router-link to="/"> Home </router-link>
-        </li>
-        <li>
-          <router-link to="/product/c1c9f2a5-7b86-4e63-9784-79d32f34d7be">
-            Product with rouse
-          </router-link>
+        <li v-for="route in routes">
+          <router-link :to="route.path">{{ route?.name }}</router-link>
         </li>
       </ul>
     </nav>
