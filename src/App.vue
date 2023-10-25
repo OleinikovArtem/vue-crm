@@ -1,11 +1,15 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import ThemeToggle from '@/components/ThemeToggle.vue'
+import Header from '@/components/Header.vue'
 </script>
 
 <template>
-  <ThemeToggle />
+  <Header />
   <RouterView />
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+.active-link {
+  @apply underline;
+}
+</style>
