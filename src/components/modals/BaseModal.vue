@@ -5,7 +5,6 @@ const props = defineProps<{ show: boolean }>()
 
 const stopPropagation = (event: Event) => {
   event.stopPropagation()
-  event.preventDefault()
 }
 </script>
 
@@ -46,7 +45,7 @@ const stopPropagation = (event: Event) => {
 }
 
 .modal-container {
-  @apply relative min-w-[300px] m-auto pt-7 rounded bg-gray-300 dark:bg-gray-800;
+  @apply relative min-w-[300px] m-auto pt-7 rounded bg-gray-300 dark:bg-gray-800 max-h-[90vh];
   transition: all 0.3s ease;
 }
 
@@ -56,6 +55,9 @@ const stopPropagation = (event: Event) => {
 
 .modal-body {
   @apply my-0 p-5 border-b border-t border-gray-300 dark:border-gray-700;
+  overflow-y: auto;
+
+  max-height: calc(90vh - 144px);
 }
 .modal-footer {
   @apply p-5;

@@ -4,6 +4,7 @@ const props = defineProps<{
   id: string
   placeholder: string
   required?: boolean
+  type?: 'text' | 'password' | 'number'
   modelValue?: string
 }>()
 </script>
