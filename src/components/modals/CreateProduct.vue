@@ -1,29 +1,59 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
+import { useMutation } from '@vue/apollo-composable'
 
 import BaseModal from './BaseModal.vue'
 import MyInput from '../UI/MyInput.vue'
 import MyTextarea from '../UI/MyTextarea.vue'
 import FileInput from '../UI/FileInput.vue'
 
+import { createProduct } from '../../services/apollo/mutations/products/createProduct'
+import { uploadSingle } from '../../services/files/uploadSingle'
+
+const emit = defineEmits()
 const showModal = ref(false)
 const formValues = reactive({
   name: '',
   description: '',
   price: '',
+  count: '',
   image: null
 })
 
-const createProduct = () => {
-  showModal.value = false
-  console.log(formValues)
+const { mutate } = useMutation(createProduct)
 
-  formValues.name = ''
-  formValues.description = ''
+const handleCreateProduct = async () => {
+  try {
+    showModal.value = false
+    const { image, ...values } = formValues
+
+    const { file_url } = await uploadSingle(image)
+
+    await mutate({
+      ...values,
+      price: Number(values.price),
+      count: Number(values.count),
+      imageUrl: file_url
+    })
+
+    clearFormValues()
+
+    emit('refresh')
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const setImage = (files: File[] | null) => {
   formValues.image = files?.[0] || null
+}
+
+function clearFormValues() {
+  formValues.name = ''
+  formValues.description = ''
+  formValues.price = ''
+  formValues.count = ''
+  formValues.image = null
 }
 </script>
 
@@ -52,12 +82,18 @@ const setImage = (files: File[] | null) => {
           placeholder="Price of your product"
           v-model="formValues.price"
         />
+        <MyInput
+          id="productCount"
+          label="Count"
+          placeholder="Count of your product"
+          v-model="formValues.count"
+        />
       </form>
     </template>
     <template #footer>
       <div class="flex justify-between">
         <button @click="showModal = false">Cancel</button>
-        <button @click="createProduct" class="btn">Create</button>
+        <button @click="handleCreateProduct" class="btn">Create</button>
       </div>
     </template>
   </BaseModal>

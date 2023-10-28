@@ -27,7 +27,7 @@ const addToCart = (event: Event) => {
           <p>{{ product.description }}</p>
         </div>
         <div class="flex items-center justify-between">
-          <span class="text-3xl font-bold text-gray-900 dark:text-white">$599</span>
+          <span class="text-3xl font-bold text-gray-900 dark:text-white">{{ product.price }}$</span>
           <button @click="addToCart" class="btn">Add to cart</button>
         </div>
       </div>

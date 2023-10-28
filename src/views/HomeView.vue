@@ -10,13 +10,13 @@ import {
 } from '../services/apollo/queries/products/getProducts'
 import CreateProduct from '../components/modals/CreateProduct.vue'
 
-const { result } = useQuery<GET_PRODUCTS>(getProducts)
+const { result, refetch } = useQuery<GET_PRODUCTS>(getProducts)
 const productsData = computed(() => result.value?.products ?? defaultResultGetProducts)
 </script>
 
 <template>
   <main>
-    <CreateProduct />
+    <CreateProduct @refresh="refetch" />
     <div>
       <div>Pages: {{ productsData.totalCount }}</div>
       <div>Current page: {{ productsData.currentPage }}</div>
