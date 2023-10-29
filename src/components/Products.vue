@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useQuery } from '@vue/apollo-composable'
+import { useRoute, useRouter } from 'vue-router'
 
 import {
   defaultResultGetProducts,
@@ -12,17 +13,34 @@ import Pagination from './UI/Pagination.vue'
 
 import ProductCard from './ProductCard.vue'
 import CreateProduct from './modals/CreateProduct.vue'
+import Spinner from './UI/Spinner.vue'
 
-const { result, refetch } = useQuery<GET_PRODUCTS>(getProducts, {
+const router = useRouter()
+const route = useRoute()
+
+const page = computed(() => route.query.page || 1)
+
+const { result, refetch, loading } = useQuery<GET_PRODUCTS>(getProducts, {
   limit: 6,
-  page: 1
+  page: Number(page.value)
 })
 const productsData = computed(() => result.value?.products ?? defaultResultGetProducts)
 
 function setPage(page) {
   if (page < 1 || page > productsData.totalPages || page === productsData.currentPage) return
-  refetch({ page })
+  router.push({
+    path: route.path,
+    query: {
+      ...route.query,
+      page
+    }
+  })
 }
+
+watch(
+  () => page.value,
+  () => refetch({ page: +page.value })
+)
 </script>
 
 <template>
@@ -31,9 +49,14 @@ function setPage(page) {
       <CreateProduct @refresh="refetch" />
       <h3>Total pages: {{ productsData.totalPages }}</h3>
     </div>
+    <div>
+      <div v-if="loading" class="w-full flex justify-center">
+        <Spinner />
+      </div>
 
-    <div class="grid-cols-3 grid gap-8">
-      <ProductCard v-for="product in productsData.items" :product="product" />
+      <div v-else class="grid-cols-3 grid gap-8">
+        <ProductCard v-for="product in productsData.items" :product="product" />
+      </div>
     </div>
     <Pagination
       @setPage="setPage"
