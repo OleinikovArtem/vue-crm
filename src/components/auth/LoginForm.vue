@@ -2,6 +2,7 @@
 import { reactive } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, email } from '@vuelidate/validators'
+import { useNotification } from '@kyvg/vue3-notification'
 
 import { useMutation } from '@vue/apollo-composable'
 import { LOGIN, login, LOGIN_VARIABLES } from '../../services/apollo/mutations/auth/login'
@@ -10,6 +11,7 @@ import * as authService from '../../services/authService'
 import MyInput from '../UI/MyInput.vue'
 import { LoginFormRules, LoginFormState } from './types'
 
+const { notify } = useNotification()
 const formValues = reactive<LoginFormState>({
   email: '',
   password: ''
@@ -24,14 +26,24 @@ const v$ = useVuelidate<LoginFormState, LoginFormRules>(rules, formValues)
 const { mutate } = useMutation<LOGIN, LOGIN_VARIABLES>(login)
 
 const handleLogin = async (event: Event) => {
-  event.preventDefault()
-  v$.value.$touch()
+  try {
+    event.preventDefault()
+    v$.value.$touch()
 
-  if (!v$.value.$invalid) {
-    const { data } = await mutate(formValues)
-    authService.login(data.login)
-  } else {
-    console.log('Validation failed.', v$.value)
+    if (!v$.value.$invalid) {
+      const { data } = await mutate(formValues)
+      authService.login(data.login)
+    } else {
+      notify({
+        title: 'Validation failed.',
+        type: 'error'
+      })
+    }
+  } catch (error) {
+    notify({
+      title: 'Login or password is incorrect, please try again.',
+      type: 'error'
+    })
   }
 }
 </script>
@@ -63,7 +75,10 @@ const handleLogin = async (event: Event) => {
       />
       <button type="submit" class="btn">Login</button>
     </form>
-    <a @click="$emit('toggleAuthType')" class="text-blue-300 cursor-pointer text-center">
+    <a
+      @click="$emit('toggleAuthType')"
+      class="dark:text-blue-300 text-blue-700 cursor-pointer text-center"
+    >
       Do you haven't an account yet? Go to the registration.
     </a>
   </div>
