@@ -8,6 +8,8 @@ export type TOKENS = {
 export const login = (tokens: TOKENS) => {
   setCookie('access_token', tokens.access_token, 1)
   setCookie('refresh_token', tokens.refresh_token, 24 * 7)
+
+  location.replace('/')
 }
 
 export const logOut = () => {

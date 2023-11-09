@@ -2,6 +2,7 @@
 import { computed, reactive } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required, email, sameAs, minLength } from '@vuelidate/validators'
+import { useNotification } from '@kyvg/vue3-notification'
 
 import { useMutation } from '@vue/apollo-composable'
 import {
@@ -14,6 +15,7 @@ import * as authService from '../../services/authService'
 import MyInput from '../UI/MyInput.vue'
 import { RegistrationFormRules, RegistrationFormState } from './types'
 
+const { notify } = useNotification()
 const formValues = reactive<RegistrationFormState>({
   email: '',
   fullName: '',
@@ -33,18 +35,28 @@ const v$ = useVuelidate<RegistrationFormState, RegistrationFormRules>(rules, for
 const { mutate } = useMutation<REGISTRATION, REGISTRATION_VARIABLES>(registration)
 
 const handleRegistration = async (event: Event) => {
-  event.preventDefault()
-  v$.value.$touch()
+  try {
+    event.preventDefault()
+    v$.value.$touch()
 
-  if (!v$.value.$invalid) {
-    const { data } = await mutate({
-      email: formValues.email,
-      password: formValues.password,
-      name: formValues.fullName
+    if (!v$.value.$invalid) {
+      const { data } = await mutate({
+        email: formValues.email,
+        password: formValues.password,
+        name: formValues.fullName
+      })
+      authService.login(data.registration)
+    } else {
+      notify({
+        title: 'Validation failed.',
+        type: 'error'
+      })
+    }
+  } catch (error) {
+    notify({
+      title: error.message,
+      type: 'error'
     })
-    authService.login(data.registration)
-  } else {
-    console.log('Validation failed.', v$.value)
   }
 }
 
@@ -104,7 +116,10 @@ function getConfirmPasswordError() {
       />
       <button @click="handleRegistration" class="btn">Create a new account</button>
     </form>
-    <a @click="$emit('toggleAuthType')" class="text-blue-300 cursor-pointer text-center">
+    <a
+      @click="$emit('toggleAuthType')"
+      class="dark:text-blue-300 text-blue-700 cursor-pointer text-center"
+    >
       Already have an account? Go to the login form.
     </a>
   </div>
