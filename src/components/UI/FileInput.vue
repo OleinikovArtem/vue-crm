@@ -15,7 +15,7 @@ const imageUrl = computed(() => (props.image ? URL.createObjectURL(props.image) 
       >
         <Icon icon="jam:trash" width="30" height="30" class="text-red-500" />
       </button>
-      <img :src="imageUrl" alt="" class="rounded-lg object-cover" />
+      <img :src="imageUrl" loading="lazy" alt="" class="rounded-lg object-cover" />
     </div>
     <label
       v-if="!imageUrl"
