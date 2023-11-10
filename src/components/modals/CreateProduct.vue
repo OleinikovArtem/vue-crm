@@ -62,7 +62,7 @@ function clearFormValues() {
   <BaseModal :show="showModal" @close="showModal = false">
     <template #header><h3 class="text-2xl">Create Product</h3></template>
     <template #body>
-      <form action="" class="gap-4 flex flex-col snap-y">
+      <form class="gap-4 flex flex-col snap-y">
         <FileInput @setFile="setImage" :image="formValues.image" />
         <MyInput
           id="productName"

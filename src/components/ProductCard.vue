@@ -16,7 +16,12 @@ const addToCart = (event: Event) => {
   <router-link :to="{ name: 'product', params: { id: product.id } }" class="wrapper">
     <div class="h-full">
       <div class="w-full overflow-hidden h-64 md:h-80">
-        <img class="rounded-lg object-cover w-full" :src="product.imageUrl" :alt="product.name" />
+        <img
+          class="rounded-lg object-cover w-full"
+          :src="product.imageUrl"
+          :alt="product.name"
+          loading="lazy"
+        />
       </div>
       <div class="content">
         <h5 class="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">

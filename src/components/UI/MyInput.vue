@@ -5,7 +5,9 @@ const props = defineProps<{
   placeholder: string
   required?: boolean
   type?: 'text' | 'password' | 'number'
+  autocomplete?: string
   modelValue?: string
+  error?: string
 }>()
 </script>
 
@@ -15,14 +17,17 @@ const props = defineProps<{
       props.label
     }}</label>
     <input
-      type="text"
+      :autocomplete="props.autocomplete || 'on'"
+      :type="props.type"
       :id="props.id"
       :placeholder="props.placeholder"
       :required="props.required"
       :value="props.modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      :style="error ? 'outline: 2px solid red' : ''"
     />
+    <p v-if="error" class="text-red-500 pt-2 text-sm">{{ error }}</p>
   </div>
 </template>
 
