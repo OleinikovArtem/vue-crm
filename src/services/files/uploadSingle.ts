@@ -10,7 +10,7 @@ export const uploadSingle = async (file: File | null) => {
     const data = new FormData()
     data.append('image', file)
 
-    const fileResponse = await fetch<Response>('http://localhost:3000/file-upload/single', {
+    const fileResponse = await fetch('http://localhost:3000/file-upload/single', {
       method: 'post',
       body: data,
       headers: {
@@ -18,7 +18,7 @@ export const uploadSingle = async (file: File | null) => {
       }
     })
 
-    return await fileResponse.json()
+    return (await fileResponse.json()) as Response
   } catch (error) {
     console.error('UPLOAD FILE IS FAILED', error)
   }
